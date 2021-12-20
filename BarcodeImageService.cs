@@ -62,10 +62,10 @@ namespace TrackAbout.BarcodeImageService
 
             // Validate the output format 'fmt'.
             var outputFormat = req.Query.ContainsKey("fmt") ? req.Query["fmt"].ToString() : "png";
-            if (outputFormat != "png" && outputFormat != "svg")
+            if (outputFormat != "png" && outputFormat != "svg" && outputFormat != "base64")
             {
                 return new BadRequestObjectResult(
-                    $"Invalid output file format 'fmt'. Value must be 'png' or 'svg'.");
+                    $"Invalid output file format 'fmt'. Value must be 'png', 'svg' or 'base64'.");
             }
 
             // Validate the barcode symbology, 'sym'.
@@ -132,6 +132,24 @@ namespace TrackAbout.BarcodeImageService
                     {
                         img.SaveAsPng(ms);
                         return new FileContentResult(ms.ToArray(), "image/png");
+                    }
+                }
+            }
+            if (outputFormat == "base64")
+            {
+                var bcWriter = new BarcodeWriterPixelData
+                {
+                    Format = symbology,
+                    Options = options
+                };
+                var pixelData = bcWriter.Write(value);
+                using (var img = Image.LoadPixelData<Rgba32>(pixelData.Pixels, pixelData.Width, pixelData.Height))
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        img.SaveAsPng(ms);
+                        var msb64 = Convert.ToBase64String(ms.ToArray());
+                        return new OkObjectResult(msb64);
                     }
                 }
             }

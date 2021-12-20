@@ -1,4 +1,4 @@
-This project is forked from trackabout/barcode-image-service. I added base64 format, changed SDK to 3.1 .Net Core, and upgraded its packages to newest releases at December of 2021.
+This project is forked from [trackabout/barcode-image-service](https://github.com/trackabout/barcode-image-service). I added base64 format, changed SDK to 3.1 .Net Core, and upgraded its packages to newest releases at December of 2021.
 
 # Barcode Image Service Azure Function
 
